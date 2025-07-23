@@ -1,0 +1,35 @@
+User interface : phone-2.png
+ชื่อ นางสาวริลณี สังหันกฤษ
+รหัส 6520310018
+
+MainApp (StatelessWidget)
+└── MaterialApp
+    └── MyHomePage (StatefulWidget)
+        └── Scaffold
+            ├── AppBar
+            │   └── Text("View location")
+            ├── body: SingleChildScrollView
+            │   └── Column
+            │       ├── SizedBox(height: 16)
+            │       ├── ClipRRect
+            │       │   └── Image.network (ภาพ 1)
+            │       ├── SizedBox(height: 12)
+            │       ├── ElevatedButton("click 1")
+            │       ├── SizedBox(height: 12)
+            │       ├── Column
+            │       │   ├── Text("Beautiful places!")
+            │       │   └── Text("Wellcome to the world of View location")
+            │       ├── SizedBox(height: 16)
+            │       ├── ClipRRect
+            │       │   └── Image.network (ภาพ 2)
+            │       ├── SizedBox(height: 12)
+            │       ├── ElevatedButton("click 2")
+            │       ├── SizedBox(height: 24)
+            │       ├── Center
+            │       │   └── Container
+            │       │       └── Text("Container stays at the bottom!")
+            │       └── SizedBox(height: 16)
+            └── BottomNavigationBar
+                ├── BottomNavigationBarItem(icon: Icon(home), label: 'Home')
+                ├── BottomNavigationBarItem(icon: Icon(info), label: 'About')
+                └── BottomNavigationBarItem(icon: Icon(settings), label: 'Setting')

@@ -1,0 +1,208 @@
+RateMyTripApp (MaterialApp)
+└── HomePage (Scaffold)
+    └── Container (Gradient Background)
+        └── SafeArea
+            └── Column
+                ├── Padding (Header Section)
+                │   └── Column
+                │       ├── Icon (location_on)
+                │       ├── SizedBox
+                │       ├── Text ("RateMyTrip")
+                │       └── Text (subtitle)
+                │
+                └── Expanded (Content Section)
+                    └── Container (White rounded container)
+                        └── Column
+                            ├── SizedBox
+                            ├── Padding (Add Button)
+                            │   └── FilledButton.icon
+                            │       ├── Icon (add_location)
+                            │       └── Text ("เพิ่มสถานที่ท่องเที่ยว")
+                            │
+                            └── Expanded (Locations List)
+                                ├── Center (Empty State) [if _locations.isEmpty]
+                                │   └── Column
+                                │       ├── Icon (explore_outlined)
+                                │       ├── SizedBox
+                                │       └── Text ("ยังไม่มีสถานที่ท่องเที่ยว")
+                                │
+                                └── ListView.builder [if _locations.isNotEmpty]
+                                    └── Card (for each location)
+                                        └── ListTile
+                                            ├── CircleAvatar (leading)
+                                            │   └── Icon (location type icon)
+                                            ├── Text (title - location name)
+                                            ├── Text (subtitle - type • province)
+                                            └── Column (trailing - score info)
+                                                ├── Row
+                                                │   ├── Icon (star)
+                                                │   └── Text (score/25)
+                                                └── Text (rating level)
+
+Dialog Trees:
+
+1. Add Location Dialog (_showAddLocationDialog):
+AlertDialog
+├── Text (title: "เพิ่มสถานที่ท่องเที่ยว")
+├── SingleChildScrollView (content)
+│   └── Form
+│       └── Column
+│           ├── TextFormField (ชื่อสถานที่)
+│           ├── SizedBox
+│           ├── DropdownButtonFormField (ประเภทสถานที่)
+│           ├── SizedBox
+│           ├── DropdownButtonFormField (จังหวัด)
+│           ├── SizedBox
+│           ├── TextFormField (ระยะทาง)
+│           ├── SizedBox
+│           ├── TextFormField (ลิ้งรูปภาพ)
+│           ├── SizedBox
+│           ├── Column (Difficulty Slider)
+│           │   ├── Text (ความยากในการเดินทาง)
+│           │   └── Slider
+│           └── CheckboxListTile (ยังไม่เป็นที่รู้จัก)
+│
+└── Row (actions)
+    ├── TextButton ("ยกเลิก")
+    └── FilledButton ("เพิ่ม")
+
+2. Location Details Dialog (_showLocationDetails):
+AlertDialog
+├── Row (title)
+│   ├── Icon (location type icon)
+│   ├── SizedBox
+│   └── Expanded
+│       └── Text (location name)
+├── Column (content)
+│   ├── ClipRRect [if imageUrl exists]
+│   │   └── Image.network
+│   ├── SizedBox
+│   ├── Container (Score Display)
+│   │   └── Column
+│   │       ├── Row
+│   │       │   ├── Icon (star)
+│   │       │   ├── SizedBox
+│   │       │   └── Text (score/25)
+│   │       ├── SizedBox
+│   │       └── Text (rating level)
+│   ├── SizedBox
+│   └── Multiple _buildDetailRow widgets
+│       └── Padding
+│           └── Row
+│               ├── Text (label)
+│               └── Text (value)
+│
+└── Row (actions)
+    ├── TextButton ("ลบ")
+    └── FilledButton ("ปิด")
+3. SnackBar (แสดงเมื่อเพิ่ม/ลบสถานที่):
+ScaffoldMessenger
+└── SnackBar
+    └── Text ("เพิ่ม [location.name] เรียบร้อยแล้ว" / "ลบ [location.name] แล้ว")
+
+4. Error Widget (เมื่อโหลดรูปภาพไม่ได้):
+Container
+├── height: 150
+├── color: Colors.grey[300]
+└── Icon (image_not_supported)
+
+5. Form Validation Error States:
+TextFormField
+└── InputDecoration
+    └── errorText (แสดงเมื่อ validation ล้มเหลว)
+        ├── "กรุณากรอกชื่อสถานที่"
+        └── "กรุณากรอกระยะทาง"
+
+6. Dropdown Menu Items (Dynamic):
+DropdownButtonFormField
+└── DropdownMenuItem (สำหรับแต่ละ item)
+    └── Text
+        ├── Types: ['ภูเขา', 'ทะเล', 'น้ำตก', 'วัด', 'ตลาด', 'อื่นๆ']
+        └── Provinces: ['กรุงเทพมหานคร', 'เชียงใหม่', ...]
+
+7. Slider Widget Tree:
+Slider
+├── value: _difficulty
+├── min: 0
+├── max: 10
+├── divisions: 10
+└── onChanged callback
+
+8. CheckboxListTile Widget Tree:
+CheckboxListTile
+├── title: Text("ยังไม่เป็นที่รู้จัก")
+├── value: _isUnknown
+├── onChanged callback
+└── controlAffinity: ListTileControlAffinity.leading
+
+9. Image.network Widget Tree (เมื่อมี imageUrl):
+ClipRRect
+├── borderRadius: BorderRadius.circular(8)
+└── Image.network
+    ├── imageUrl
+    ├── height: 150
+    ├── width: double.infinity
+    ├── fit: BoxFit.cover
+    └── errorBuilder: Container + Icon
+
+10. Theme และ ColorScheme Tree:
+MaterialApp
+└── ThemeData
+    ├── useMaterial3: true
+    └── ColorScheme.fromSeed
+        └── seedColor: Color(0xFF6750A4)
+
+11. Input Formatters Tree:
+TextFormField (ระยะทาง)
+└── inputFormatters
+    └── FilteringTextInputFormatter.digitsOnly
+
+12. Gradient Background Tree:
+Container
+└── BoxDecoration
+    └── LinearGradient
+        ├── begin: Alignment.topCenter
+        ├── end: Alignment.bottomCenter
+        └── colors: [Color(0xFF6750A4), Color(0xFFE8DEF8)]
+
+13. Rounded Container Tree:
+Container (Content Section)
+└── BoxDecoration
+    ├── color: Colors.white
+    └── BorderRadius.only
+        ├── topLeft: Radius.circular(24)
+        └── topRight: Radius.circular(24)
+14. Icon Selection Logic:
+_getLocationIcon() returns:
+├── Icons.terrain (ภูเขา)
+├── Icons.waves (ทะเล)  
+├── Icons.water (น้ำตก)
+├── Icons.temple_buddhist (วัด)
+├── Icons.store (ตลาด)
+└── Icons.place (default)
+
+15. Score Calculation Widget Flow:
+TripLocation.calculateScore()
+├── difficultyScore: (10 - difficulty) * 1.5
+├── distanceScore: distance <= 50 ? 8 : (distance <= 100 ? 5 : 2)
+└── unknownBonus: isUnknown ? 2 : 0
+
+16. Rating Level Widget Flow:
+TripLocation.getRatingLevel()
+├── score >= 20: '🌟 ยอดเยี่ยม'
+├── score >= 15: '⭐ ดีมาก'  
+├── score >= 10: '👍 ดี'
+└── default: '📍 พอใช้'
+
+17. Form State Management:
+GlobalKey<FormState>
+├── _formKey.currentState!.validate()
+└── Form validation triggers
+
+18. Controllers Tree:
+TextEditingController
+├── _nameController
+└── _distanceController
+    ├── .text (getter)
+    ├── .clear() (method)
+    └── dispose() (cleanup)
